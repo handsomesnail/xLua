@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace XLua.LuaDLL
 {
@@ -188,9 +188,11 @@ namespace XLua
             foreach (var kv in to.TableSizes)
             {
                 int oldSize;
-                if (from.TableSizes.TryGetValue(kv.Key, out oldSize) && (oldSize < kv.Value || (keepEqual && oldSize == kv.Value))) // exist table
+                // 添加(keepEqual && oldSize == kv.Value)判断会使两个完全一样的snapshot会被全部记录为泄露
+                // if (from.TableSizes.TryGetValue(kv.Key, out oldSize) && (oldSize < kv.Value || (keepEqual && oldSize == kv.Value))) // exist table
+                if (from.TableSizes.TryGetValue(kv.Key, out oldSize) && (oldSize < kv.Value)) // exist table
                 {
-                    result.TableSizes.Add(kv.Key, kv.Value);
+                    result.TableSizes.Add(kv.Key, kv.Value - oldSize);
                 }
             }
             return result;

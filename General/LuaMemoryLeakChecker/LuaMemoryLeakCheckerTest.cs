@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using XLua;
 
@@ -15,11 +15,16 @@ public class LuaMemoryLeakCheckerTest : MonoBehaviour
            global_leak = { a = {}}
            --global_leak.a.b = global_leak
 
-           local no_leak = {}
+           local no_leak = { a = {x = 0}, b = {y = 0}}
            
            function make_leak1()
                table.insert(local_leak, 1)
                table.insert(global_leak, {})
+           end
+
+           -- 添加全局变量相当于_G泄露
+           function make_leak3()
+               new_leak = { a = 1 }
            end
 
            -- 会不断创建并持有新table，但其实没泄漏
@@ -43,7 +48,7 @@ public class LuaMemoryLeakCheckerTest : MonoBehaviour
            debug.getregistry()['ref_anthor_leak'] = anthor_leak
            
            function slow_leak()
-               if t == 40 then
+               if t == 60 then
                    t = 0
                    table.insert(slow_global_leak, {x = 0, y = 1})
                else
@@ -60,6 +65,7 @@ public class LuaMemoryLeakCheckerTest : MonoBehaviour
                  if not shutdown_fast_leak then
                      make_leak1()
                      make_leak2()
+                     -- make_leak3()
                  end
                  innocent()
                  slow_leak()
@@ -86,16 +92,18 @@ public class LuaMemoryLeakCheckerTest : MonoBehaviour
 
             if (tick % 30 == 0)
             {
-                data = luaenv.MemoryLeakCheck(data);
-                Debug.Log("Update, PotentialLeakCount:" + data.PotentialLeakCount);
+                LuaMemoryLeakChecker.Data report = luaenv.MemoryLeakCheck(data);
+                Debug.Log("Update, PotentialLeakCount:" + report.PotentialLeakCount);
             }
 
             if (tick % 180 == 0)
             {
-                Debug.Log(luaenv.MemoryLeakReport(data));
+                LuaMemoryLeakChecker.Data report = luaenv.MemoryLeakCheck(data);
+                Debug.Log(luaenv.MemoryLeakReport(report));
 
                 if (tick == 180)
                 {
+                    Debug.Log("shutdown_fast_leak");
                     //假装解决了快速内存泄漏
                     luaenv.Global.Set("shutdown_fast_leak", true);
                     //开启一个新的泄漏检测
