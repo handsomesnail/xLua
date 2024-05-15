@@ -357,7 +357,7 @@ namespace XLua
 #endif
         }
 
-        //¼æÈİAPI
+        //å…¼å®¹API
         public void GC()
         {
             Tick();
@@ -409,7 +409,7 @@ namespace XLua
                 {
                     throw new InvalidOperationException("try to dispose a LuaEnv with C# callback!");
                 }
-                
+
                 ObjectTranslatorPool.Instance.Remove(L);
 
                 LuaAPI.lua_close(L);
@@ -460,7 +460,7 @@ namespace XLua
             }
         }
 
-        private string init_xlua = @" 
+        private string init_xlua = @"
             local metatable = {}
             local rawget = rawget
             local setmetatable = setmetatable
@@ -468,7 +468,7 @@ namespace XLua
             local import_generic_type = xlua.import_generic_type
             local load_assembly = xlua.load_assembly
 
-            function metatable:__index(key) 
+            function metatable:__index(key)
                 local fqn = rawget(self,'.fqn')
                 fqn = ((fqn and fqn .. '.') or '') .. key
 
@@ -579,7 +579,7 @@ namespace XLua
                 impl.UnderlyingSystemType = parent[name].UnderlyingSystemType
                 rawset(parent, name, impl)
             end
-            
+
             local base_mt = {
                 __index = function(t, k)
                     local csobj = t['__csobj']
@@ -598,8 +598,8 @@ namespace XLua
 
         internal List<CustomLoader> customLoaders = new List<CustomLoader>();
 
-        //loader : CustomLoader£¬ filepath²ÎÊı£º£¨refÀàĞÍ£©ÊäÈëÊÇrequireµÄ²ÎÊı£¬Èç¹ûĞèÒªÖ§³Öµ÷ÊÔ£¬ĞèÒªÊä³öÕæÊµÂ·¾¶¡£
-        //                        ·µ»ØÖµ£ºÈç¹û·µ»Ønull£¬´ú±í¼ÓÔØ¸ÃÔ´ÏÂÎŞºÏÊÊµÄÎÄ¼ş£¬·ñÔò·µ»ØUTF8±àÂëµÄbyte[]
+        //loader : CustomLoaderï¼Œ filepathå‚æ•°ï¼šï¼ˆrefç±»å‹ï¼‰è¾“å…¥æ˜¯requireçš„å‚æ•°ï¼Œå¦‚æœéœ€è¦æ”¯æŒè°ƒè¯•ï¼Œéœ€è¦è¾“å‡ºçœŸå®è·¯å¾„ã€‚
+        //                        è¿”å›å€¼ï¼šå¦‚æœè¿”å›nullï¼Œä»£è¡¨åŠ è½½è¯¥æºä¸‹æ— åˆé€‚çš„æ–‡ä»¶ï¼Œå¦åˆ™è¿”å›UTF8ç¼–ç çš„byte[]
         public void AddLoader(CustomLoader loader)
         {
             customLoaders.Add(loader);
@@ -616,9 +616,9 @@ namespace XLua
             buildin_initer.Add(name, initer);
         }
 
-        //The garbage-collector pause controls how long the collector waits before starting a new cycle. 
-        //Larger values make the collector less aggressive. Values smaller than 100 mean the collector 
-        //will not wait to start a new cycle. A value of 200 means that the collector waits for the total 
+        //The garbage-collector pause controls how long the collector waits before starting a new cycle.
+        //Larger values make the collector less aggressive. Values smaller than 100 mean the collector
+        //will not wait to start a new cycle. A value of 200 means that the collector waits for the total
         //memory in use to double before starting a new cycle.
         public int GcPause
         {
@@ -648,10 +648,10 @@ namespace XLua
             }
         }
 
-        //The step multiplier controls the relative speed of the collector relative to memory allocation. 
-        //Larger values make the collector more aggressive but also increase the size of each incremental 
-        //step. Values smaller than 100 make the collector too slow and can result in the collector never 
-        //finishing a cycle. The default, 200, means that the collector runs at "twice" the speed of memory 
+        //The step multiplier controls the relative speed of the collector relative to memory allocation.
+        //Larger values make the collector more aggressive but also increase the size of each incremental
+        //step. Values smaller than 100 make the collector too slow and can result in the collector never
+        //finishing a cycle. The default, 200, means that the collector runs at "twice" the speed of memory
         //allocation.
         public int GcStepmul
         {
