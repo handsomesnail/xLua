@@ -729,7 +729,8 @@ namespace XLua
 #endif
         }
 
-        public int Memroy
+        /// <summary>返回当前Lua虚拟机占用的总内存(单位KB)</summary>
+        public int Memory
         {
             get
             {
@@ -743,5 +744,22 @@ namespace XLua
 #endif
             }
         }
+
+        /// <summary>返回当前Lua虚拟机占用的总内存(单位字节)</summary>
+        public int MemoryB
+        {
+            get
+            {
+#if THREAD_SAFE || HOTFIX_ENABLE
+                lock (luaEnvLock)
+                {
+#endif
+                return LuaAPI.lua_gc(L, LuaGCOptions.LUA_GCCOUNT, 0) * 1024 + LuaAPI.lua_gc(L, LuaGCOptions.LUA_GCCOUNTB, 0);
+#if THREAD_SAFE || HOTFIX_ENABLE
+                }
+#endif
+            }
+        }
+
     }
 }
