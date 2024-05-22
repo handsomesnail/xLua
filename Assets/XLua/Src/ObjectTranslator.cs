@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Tencent is pleased to support the open source community by making xLua available.
  * Copyright (C) 2016 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -150,7 +150,7 @@ namespace XLua
             }
             else
             {
-#if !GEN_CODE_MINIMIZE && !ENABLE_IL2CPP && (UNITY_EDITOR || XLUA_GENERAL) && !FORCE_REFLECTION && !NET_STANDARD_2_0
+#if !GEN_CODE_MINIMIZE && !ENABLE_IL2CPP && (UNITY_EDITOR || XLUA_GENERAL) && !FORCE_REFLECTION
                 if (!DelegateBridge.Gen_Flag && !type.IsEnum() && !typeof(Delegate).IsAssignableFrom(type) && Utils.IsPublic(type))
                 {
                     Type wrap = ce.EmitTypeWrap(type);
@@ -272,7 +272,7 @@ namespace XLua
             ERROR
         }
 
-#if (UNITY_EDITOR || XLUA_GENERAL) && !NET_STANDARD_2_0
+#if (UNITY_EDITOR || XLUA_GENERAL)
         Type delegate_birdge_type;
 
         class CompareByArgRet : IEqualityComparer<MethodInfo>
@@ -296,7 +296,7 @@ namespace XLua
 
         void initCSharpCallLua()
         {
-#if (UNITY_EDITOR || XLUA_GENERAL) && !NET_STANDARD_2_0
+#if (UNITY_EDITOR || XLUA_GENERAL)
             delegate_birdge_type = typeof(DelegateBridge);
             if (!DelegateBridge.Gen_Flag)
             {
@@ -341,7 +341,7 @@ namespace XLua
 #endif
         }
 
-#if (UNITY_EDITOR || XLUA_GENERAL) && !NET_STANDARD_2_0
+#if (UNITY_EDITOR || XLUA_GENERAL)
         CodeEmit ce = new CodeEmit();
 #endif
         MethodInfo[] genericAction = null;
@@ -511,7 +511,7 @@ namespace XLua
             DelegateBridgeBase bridge;
             try
             {
-#if (UNITY_EDITOR || XLUA_GENERAL) && !NET_STANDARD_2_0
+#if (UNITY_EDITOR || XLUA_GENERAL)
                 if (!DelegateBridge.Gen_Flag)
                 {
                     bridge = Activator.CreateInstance(delegate_birdge_type, new object[] { reference, luaEnv }) as DelegateBridgeBase;
@@ -602,7 +602,7 @@ namespace XLua
 
             if (!interfaceBridgeCreators.TryGetValue(interfaceType, out creator))
             {
-#if (UNITY_EDITOR || XLUA_GENERAL) && !NET_STANDARD_2_0
+#if (UNITY_EDITOR || XLUA_GENERAL)
                 var bridgeType = ce.EmitInterfaceImpl(interfaceType);
                 creator = (int reference, LuaEnv luaenv) =>
                 {
