@@ -30,7 +30,7 @@ static int tag = 0;
 static const char *const hooknames[] = {"call", "return", "line", "count", "tail return"};
 static int hook_index = -1;
 
-LUA_API void *xlua_tag () 
+LUA_API void *xlua_tag ()
 {
 	return &tag;
 }
@@ -62,7 +62,7 @@ LUA_API int xlua_tocsobj_safe(lua_State *L,int index) {
 LUA_API int xlua_tocsobj_fast (lua_State *L,int index) {
 	int *udata = (int *)lua_touserdata (L,index);
 
-	if(udata!=NULL) 
+	if(udata!=NULL)
 		return *udata;
 	return -1;
 }
@@ -206,8 +206,8 @@ LUALIB_API int xluaL_loadbuffer (lua_State *L, const char *buff, int size,
 	return luaL_loadbuffer(L, buff, size, name);
 }
 
-static int c_lua_gettable(lua_State* L) {    
-    lua_gettable(L, 1);    
+static int c_lua_gettable(lua_State* L) {
+    lua_gettable(L, 1);
     return 1;
 }
 
@@ -358,7 +358,7 @@ static void cacheud(lua_State *L, int key, int cache_ref) {
 LUA_API void xlua_pushcsobj(lua_State *L, int key, int meta_ref, int need_cache, int cache_ref) {
 	int* pointer = (int*)lua_newuserdata(L, sizeof(int));
 	*pointer = key;
-	
+
 	if (need_cache) cacheud(L, key, cache_ref);
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, meta_ref);
@@ -388,7 +388,7 @@ void print_value(lua_State *L,  char *str, int idx) {
 
 //upvalue --- [1]: methods, [2]:getters, [3]:csindexer, [4]:base, [5]:indexfuncs, [6]:arrayindexer, [7]:baseindex
 //param   --- [1]: obj, [2]: key
-LUA_API int obj_indexer(lua_State *L) {	
+LUA_API int obj_indexer(lua_State *L) {
 	if (!lua_isnil(L, lua_upvalueindex(1))) {
 		lua_pushvalue(L, 2);
 		lua_gettable(L, lua_upvalueindex(1));
@@ -397,7 +397,7 @@ LUA_API int obj_indexer(lua_State *L) {
 		}
 		lua_pop(L, 1);
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(2))) {
 		lua_pushvalue(L, 2);
 		lua_gettable(L, lua_upvalueindex(2));
@@ -408,8 +408,8 @@ LUA_API int obj_indexer(lua_State *L) {
 		}
 		lua_pop(L, 1);
 	}
-	
-	
+
+
 	if (!lua_isnil(L, lua_upvalueindex(6)) && lua_type(L, 2) == LUA_TNUMBER) {
 		lua_pushvalue(L, lua_upvalueindex(6));
 		lua_pushvalue(L, 1);
@@ -417,7 +417,7 @@ LUA_API int obj_indexer(lua_State *L) {
 		lua_call(L, 2, 1);
 		return 1;
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(3))) {
 		lua_pushvalue(L, lua_upvalueindex(3));
 		lua_pushvalue(L, 1);
@@ -428,7 +428,7 @@ LUA_API int obj_indexer(lua_State *L) {
 		}
 		lua_pop(L, 2);
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(4))) {
 		lua_pushvalue(L, lua_upvalueindex(4));
 		while(!lua_isnil(L, -1)) {
@@ -447,7 +447,7 @@ LUA_API int obj_indexer(lua_State *L) {
 		lua_pushnil(L);
 		lua_replace(L, lua_upvalueindex(4));//base = nil
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(7))) {
 		lua_settop(L, 2);
 		lua_pushvalue(L, lua_upvalueindex(7));
@@ -479,7 +479,7 @@ LUA_API int obj_newindexer(lua_State *L) {
 		}
 		lua_pop(L, 1);
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(2))) {
 		lua_pushvalue(L, lua_upvalueindex(2));
 		lua_pushvalue(L, 1);
@@ -490,7 +490,7 @@ LUA_API int obj_newindexer(lua_State *L) {
 			return 0;
 		}
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(5)) && lua_type(L, 2) == LUA_TNUMBER) {
 		lua_pushvalue(L, lua_upvalueindex(5));
 		lua_pushvalue(L, 1);
@@ -499,7 +499,7 @@ LUA_API int obj_newindexer(lua_State *L) {
 		lua_call(L, 3, 0);
 		return 0;
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(3))) {
 		lua_pushvalue(L, lua_upvalueindex(3));
 		while(!lua_isnil(L, -1)) {
@@ -519,7 +519,7 @@ LUA_API int obj_newindexer(lua_State *L) {
 		lua_pushnil(L);
 		lua_replace(L, lua_upvalueindex(3));//base = nil
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(6))) {
 		lua_settop(L, 3);
 		lua_pushvalue(L, lua_upvalueindex(6));
@@ -539,7 +539,7 @@ LUA_API int gen_obj_newindexer(lua_State *L) {
 
 //upvalue --- [1]:getters, [2]:feilds, [3]:base, [4]:indexfuncs, [5]:baseindex
 //param   --- [1]: obj, [2]: key
-LUA_API int cls_indexer(lua_State *L) {	
+LUA_API int cls_indexer(lua_State *L) {
 	if (!lua_isnil(L, lua_upvalueindex(1))) {
 		lua_pushvalue(L, 2);
 		lua_gettable(L, lua_upvalueindex(1));
@@ -549,7 +549,7 @@ LUA_API int cls_indexer(lua_State *L) {
 		}
 		lua_pop(L, 1);
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(2))) {
 		lua_pushvalue(L, 2);
 		lua_rawget(L, lua_upvalueindex(2));
@@ -558,7 +558,7 @@ LUA_API int cls_indexer(lua_State *L) {
 		}
 		lua_pop(L, 1);
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(3))) {
 		lua_pushvalue(L, lua_upvalueindex(3));
 		while(!lua_isnil(L, -1)) {
@@ -577,7 +577,7 @@ LUA_API int cls_indexer(lua_State *L) {
 		lua_pushnil(L);
 		lua_replace(L, lua_upvalueindex(3));//base = nil
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(5))) {
 		lua_settop(L, 2);
 		lua_pushvalue(L, lua_upvalueindex(5));
@@ -598,7 +598,7 @@ LUA_API int gen_cls_indexer(lua_State *L) {
 
 //upvalue --- [1]:setters, [2]:base, [3]:indexfuncs, [4]:baseindex
 //param   --- [1]: obj, [2]: key, [3]: value
-LUA_API int cls_newindexer(lua_State *L) {	
+LUA_API int cls_newindexer(lua_State *L) {
 	if (!lua_isnil(L, lua_upvalueindex(1))) {
 		lua_pushvalue(L, 2);
 		lua_gettable(L, lua_upvalueindex(1));
@@ -608,7 +608,7 @@ LUA_API int cls_newindexer(lua_State *L) {
 			return 0;
 		}
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(2))) {
 		lua_pushvalue(L, lua_upvalueindex(2));
 		while(!lua_isnil(L, -1)) {
@@ -627,7 +627,7 @@ LUA_API int cls_newindexer(lua_State *L) {
 		lua_pushnil(L);
 		lua_replace(L, lua_upvalueindex(2));//base = nil
 	}
-	
+
 	if (!lua_isnil(L, lua_upvalueindex(4))) {
 		lua_settop(L, 3);
 		lua_pushvalue(L, lua_upvalueindex(4));
@@ -674,13 +674,13 @@ LUA_API int pcall_prepare(lua_State *L, int error_func_ref, int func_ref) {
 static void hook(lua_State *L, lua_Debug *ar)
 {
 	int event;
-	
+
 	lua_pushlightuserdata(L, &hook_index);
 	lua_rawget(L, LUA_REGISTRYINDEX);
 
 	event = ar->event;
 	lua_pushstring(L, hooknames[event]);
-  
+
 	lua_getinfo(L, "nS", ar);
 	if (*(ar->what) == 'C') {
 		lua_pushfstring(L, "[?%s]", ar->name);
@@ -693,23 +693,23 @@ static void hook(lua_State *L, lua_Debug *ar)
 
 static void call_ret_hook(lua_State *L) {
 	lua_Debug ar;
-	
+
 	if (lua_gethook(L)) {
 		lua_getstack(L, 0, &ar);
 		lua_getinfo(L, "n", &ar);
-		
+
 		lua_pushlightuserdata(L, &hook_index);
 		lua_rawget(L, LUA_REGISTRYINDEX);
-		
+
 		if (lua_type(L, -1) != LUA_TFUNCTION){
 			lua_pop(L, 1);
 			return;
         }
-		
+
 		lua_pushliteral(L, "return");
 		lua_pushfstring(L, "[?%s]", ar.name);
 		lua_pushliteral(L, "[C#]");
-		
+
 		lua_sethook(L, 0, 0, 0);
 		lua_call(L, 3, 0);
 		lua_sethook(L, hook, LUA_MASKCALL | LUA_MASKRET, 0);
@@ -721,7 +721,7 @@ static int profiler_set_hook(lua_State *L) {
 		lua_pushlightuserdata(L, &hook_index);
 		lua_pushnil(L);
 		lua_rawset(L, LUA_REGISTRYINDEX);
-			
+
 		lua_sethook(L, 0, 0, 0);
 	} else {
 		luaL_checktype(L, 1, LUA_TFUNCTION);
@@ -735,24 +735,24 @@ static int profiler_set_hook(lua_State *L) {
 
 static int csharp_function_wrap(lua_State *L) {
 	lua_CFunction fn = (lua_CFunction)lua_tocfunction(L, lua_upvalueindex(1));
-    int ret = fn(L);    
-    
+    int ret = fn(L);
+
     if (lua_toboolean(L, lua_upvalueindex(2)))
     {
         lua_pushboolean(L, 0);
         lua_replace(L, lua_upvalueindex(2));
         return lua_error(L);
     }
-    
+
 	if (lua_gethook(L)) {
 		call_ret_hook(L);
 	}
-	
+
     return ret;
 }
 
 LUA_API void xlua_push_csharp_function(lua_State* L, lua_CFunction fn, int n)
-{ 
+{
     lua_pushcfunction(L, fn);
 	if (n > 0) {
 		lua_insert(L, -1 - n);
@@ -775,29 +775,29 @@ LUA_API void xlua_set_csharp_wrapper_caller(lua_CSWrapperCaller wrapper_caller)
 
 static int csharp_function_wrapper_wrapper(lua_State *L) {
     int ret = 0;
-	
+
 	if (g_csharp_wrapper_caller == NULL) {
 		return luaL_error(L, "g_csharp_wrapper_caller not set");
 	}
-	
-	ret = g_csharp_wrapper_caller(L, xlua_tointeger(L, lua_upvalueindex(1)), lua_gettop(L));    
-    
+
+	ret = g_csharp_wrapper_caller(L, xlua_tointeger(L, lua_upvalueindex(1)), lua_gettop(L));
+
     if (lua_toboolean(L, lua_upvalueindex(2)))
     {
         lua_pushboolean(L, 0);
         lua_replace(L, lua_upvalueindex(2));
         return lua_error(L);
     }
-    
+
 	if (lua_gethook(L)) {
 		call_ret_hook(L);
 	}
-	
+
     return ret;
 }
 
 LUA_API void xlua_push_csharp_wrapper(lua_State* L, int wrapperid)
-{ 
+{
 	lua_pushinteger(L, wrapperid);
 	lua_pushboolean(L, 0);
     lua_pushcclosure(L, csharp_function_wrapper_wrapper, 2);
@@ -859,7 +859,7 @@ LUA_API void *xlua_tostruct(lua_State *L, int idx, int meta_ref) {
 			lua_rawgeti(L, -1, 1);
 			if (lua_type(L, -1) == LUA_TNUMBER && (int)lua_tointeger(L, -1) == meta_ref) {
 				lua_pop(L, 2);
-				return css->data; 
+				return css->data;
 			}
 			lua_pop(L, 2);
 		}
@@ -1211,7 +1211,7 @@ LUA_API int css_clone(lua_State *L) {
 	if (!is_cs_data(L, 1) || from->fake_id != -1) {
 		return luaL_error(L, "invalid c# struct!");
 	}
-	
+
 	to = (CSharpStruct *)lua_newuserdata(L, from->len + sizeof(int) + sizeof(unsigned int));
 	to->fake_id = -1;
 	to->len = from->len;
@@ -1234,7 +1234,7 @@ static const luaL_Reg xlualib[] = {
 
 LUA_API void luaopen_xlua(lua_State *L) {
 	luaL_openlibs(L);
-	
+
 #if LUA_VERSION_NUM >= 503
 	luaL_newlib(L, xlualib);
 	lua_setglobal(L, "xlua");
