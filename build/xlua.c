@@ -10,11 +10,9 @@
 
 #define LUA_LIB
 
-extern "C" {
 #include "lauxlib.h"
 #include "lua.h"
 #include "lualib.h"
-}
 
 #include <stdint.h>
 #include <string.h>
@@ -1159,6 +1157,7 @@ LUA_API void *xlua_gl(lua_State *L) { return G(L); }
 static const luaL_Reg xlualib[] = {
     {"sethook", profiler_set_hook}, {"genaccessor", gen_css_access}, {"structclone", css_clone}, {NULL, NULL}};
 
+extern void luaopen_sidlrt(lua_State *L);
 LUA_API void luaopen_xlua(lua_State *L) {
   luaL_openlibs(L);
 
@@ -1169,4 +1168,6 @@ LUA_API void luaopen_xlua(lua_State *L) {
   luaL_register(L, "xlua", xlualib);
   lua_pop(L, 1);
 #endif
+
+  luaopen_sidlrt(L);
 }

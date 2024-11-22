@@ -6,6 +6,10 @@
 
 cmake_minimum_required(VERSION 2.8)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 if ( WIN32 AND NOT CYGWIN AND NOT ( CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" ) AND NOT ANDROID)
 	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT" CACHE STRING "")
 	set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd" CACHE STRING "")
@@ -40,6 +44,20 @@ endif()
 set(LUA_SRC_PATH lua-${LUA_VERSION}/src)
 set(LUAJIT_SRC_PATH luajit-2.1.0b3/src)
 
+link_directories(${CMAKE_SOURCE_DIR}/../../../../build/output)
+
+set(THIRDPART_INC
+    ${CMAKE_SOURCE_DIR}/../../../runtime
+)
+
+set(THIRDPART_SRC
+    sidlrt.cpp
+)
+
+set(THIRDPART_LIB
+    SidlRT
+)
+
 if (USING_LUAJIT)
 
     if (APPLE AND NOT IOS AND NOT ANDROID)
@@ -64,7 +82,7 @@ if (USING_LUAJIT)
 	    )
 
 	    set ( LUA_CORE )
-	    set_property( SOURCE xlua.cpp APPEND PROPERTY COMPILE_DEFINITIONS USING_LUAJIT )
+	    set_property( SOURCE xlua.c APPEND PROPERTY COMPILE_DEFINITIONS USING_LUAJIT )
     endif ()
 	set ( LUA_LIB )
 else ()
@@ -114,7 +132,7 @@ endif ( )
 
 set ( XLUA_CORE
     i64lib.c
-    xlua.cpp
+    xlua.c
 )
 
 if (NOT USING_LUAJIT)
