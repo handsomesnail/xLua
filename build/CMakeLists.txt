@@ -64,7 +64,7 @@ if (USING_LUAJIT)
 	    )
 
 	    set ( LUA_CORE )
-	    set_property( SOURCE xlua.c APPEND PROPERTY COMPILE_DEFINITIONS USING_LUAJIT )
+	    set_property( SOURCE xlua.cpp APPEND PROPERTY COMPILE_DEFINITIONS USING_LUAJIT )
     endif ()
 	set ( LUA_LIB )
 else ()
@@ -114,7 +114,7 @@ endif ( )
 
 set ( XLUA_CORE
     i64lib.c
-    xlua.c
+    xlua.cpp
 )
 
 if (NOT USING_LUAJIT)
