@@ -539,6 +539,19 @@ namespace XLua.LuaDLL
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int xlua_psettable_bypath(IntPtr L, int idx, string path);
 
+        #region SidlRT扩展
+
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool xlua_issidlobj(IntPtr L, int idx);
+
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern ulong xlua_getsidlobj(IntPtr L, int idx);
+
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void xlua_pushsidlobj(IntPtr L, ulong instanceId);
+
+        #endregion
+
         //[DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         //public static extern void xlua_pushbuffer(IntPtr L, byte[] buff);
 
@@ -595,5 +608,7 @@ namespace XLua.LuaDLL
             xlua_set_csharp_wrapper_caller(Marshal.GetFunctionPointerForDelegate(wrapper_caller));
         }
 #endif
+
+
     }
 }

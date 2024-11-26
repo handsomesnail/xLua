@@ -904,6 +904,11 @@ namespace XLua
                     {
                         return get(L, index);
                     }
+                    if(LuaAPI.xlua_issidlobj(L, index))
+                    {
+                        ulong instanceId = LuaAPI.xlua_getsidlobj(L, index);
+                        return SidlRT.SidlObjectHandlePool.GetDynamic(instanceId);
+                    }
                 }
                 return (objectCasters.GetCaster(type)(L, index, null));
             }
@@ -1177,6 +1182,10 @@ namespace XLua
             {
                 Push(L, o as LuaCSFunction);
             }
+            else if (o is SidlRT.SidlObjectHandle)
+            {
+                LuaAPI.xlua_pushsidlobj(L, (o as SidlRT.SidlObjectHandle).InstanceId);
+            }
             else if (o is ValueType)
             {
                 PushCSObject push;
@@ -1350,6 +1359,11 @@ namespace XLua
                 if (type != null && custom_get_funcs.TryGetValue(type, out get))
                 {
                     return get(L, index);
+                }
+                else if (LuaAPI.xlua_issidlobj(L, index))
+                {
+                    ulong instanceId = LuaAPI.xlua_getsidlobj(L, index);
+                    return SidlRT.SidlObjectHandlePool.GetDynamic(instanceId);
                 }
                 else
                 {
