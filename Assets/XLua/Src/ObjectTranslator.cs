@@ -1261,6 +1261,13 @@ namespace XLua
                 return;
             }
 
+            // 代码生成会直接调用ObjectTranslator.Push
+            if (o is SidlRT.SidlObjectHandle)
+            {
+                LuaAPI.xlua_pushsidlobj(L, (o as SidlRT.SidlObjectHandle).InstanceId);
+                return;
+            }
+
             int index = -1;
             Type type = o.GetType();
 #if !UNITY_WSA || UNITY_EDITOR
