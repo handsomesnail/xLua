@@ -459,7 +459,7 @@ static int sidlrt_get_meta_name(lua_State *L) {
     return luaL_error(L, "SidlObject type doesn't match");
   }
   uint64_t instance_id = *(uint64_t *)lua_touserdata(L, 1);  // R(1): UserData
-  const char *meta_name = SidlAPI_GetObjectMetaName(instance_id).stringValue;
+  const char *meta_name = SidlAPI_GetInstanceMetaName(instance_id).stringValue;
   lua_pushstring(L, meta_name);  // Return(1): TypeName
   return 1;
 }
