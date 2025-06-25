@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Tencent is pleased to support the open source community by making xLua available.
  * Copyright (C) 2016 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -141,7 +141,11 @@ namespace XLua
             }
             else if (type.IsEnum())
             {
-                return fixTypeCheck;
+                // return fixTypeCheck;
+                return (RealStatePtr L, int idx) =>
+                {
+                    return LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TNUMBER && (LuaAPI.lua_isint64(L, idx) || LuaAPI.lua_isinteger(L, idx));
+                };
             }
             else if (type.IsInterface())
             {
@@ -485,17 +489,28 @@ namespace XLua
             {
                 return (RealStatePtr L, int idx, object target) =>
                 {
-                    object obj = fixTypeGetter(L, idx, target);
-                    if (obj != null) return obj;
+                    //object obj = fixTypeGetter(L, idx, target);
+                    //if (obj != null) return obj;
 
-                    LuaTypes lua_type = LuaAPI.lua_type(L, idx);
-                    if (lua_type == LuaTypes.LUA_TSTRING)
+                    //LuaTypes lua_type = LuaAPI.lua_type(L, idx);
+                    //if (lua_type == LuaTypes.LUA_TSTRING)
+                    //{
+                    //    return Enum.Parse(type, LuaAPI.lua_tostring(L, idx));
+                    //}
+                    //else if (lua_type == LuaTypes.LUA_TNUMBER)
+                    //{
+                    //    return Enum.ToObject(type, LuaAPI.xlua_tointeger(L, idx));
+                    //}
+                    if (type.IsEnum() && LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TNUMBER)
                     {
-                        return Enum.Parse(type, LuaAPI.lua_tostring(L, idx));
-                    }
-                    else if (lua_type == LuaTypes.LUA_TNUMBER)
-                    {
-                        return Enum.ToObject(type, LuaAPI.xlua_tointeger(L, idx));
+                        if (LuaAPI.lua_isint64(L, idx))
+                        {
+                            return Enum.ToObject(type, LuaAPI.lua_toint64(L, idx));
+                        }
+                        else if (LuaAPI.lua_isinteger(L, idx))
+                        {
+                            return Enum.ToObject(type, LuaAPI.xlua_tointeger(L, idx));
+                        }
                     }
                     throw new InvalidCastException("invalid value for enum " + type);
                 };

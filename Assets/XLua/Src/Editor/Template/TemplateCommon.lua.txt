@@ -421,9 +421,9 @@ function PushObjectNeedTranslator(type_info)
 end
 
 local GenericParameterAttributes = CS.System.Reflection.GenericParameterAttributes
-local enum_and_op = debug.getmetatable(CS.System.Reflection.BindingFlags.Public).__band
+-- local enum_and_op = debug.getmetatable(CS.System.Reflection.BindingFlags.Public).__band
 local has_generic_flag = function(f1, f2)
-    return (f1 ~= GenericParameterAttributes.None) and (enum_and_op(f1, f2) == f2)
+    return (f1 ~= GenericParameterAttributes.None) and (f1 & f2 == f2)
 end
 
 function GenericArgumentList(type)

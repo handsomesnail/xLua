@@ -889,7 +889,8 @@ namespace XLua
             }
             else
             {
-                if (LuaAPI.lua_type(L, index) == LuaTypes.LUA_TUSERDATA)
+                LuaTypes lua_type = LuaAPI.lua_type(L, index);
+                if (lua_type == LuaTypes.LUA_TUSERDATA)
                 {
                     GetCSObject get;
                     int type_id = LuaAPI.xlua_gettypeid(L, index);
@@ -908,6 +909,17 @@ namespace XLua
                     {
                         ulong instanceId = LuaAPI.xlua_getsidlobj(L, index);
                         return SidlRT.SidlObjectHandlePool.GetDynamic(instanceId);
+                    }
+                }
+                if (type.IsEnum() && lua_type == LuaTypes.LUA_TNUMBER)
+                {
+                    if (LuaAPI.lua_isint64(L, index))
+                    {
+                        return Enum.ToObject(type, LuaAPI.lua_toint64(L, index));
+                    }
+                    else if (LuaAPI.lua_isinteger(L, index))
+                    {
+                        return Enum.ToObject(type, LuaAPI.xlua_tointeger(L, index));
                     }
                 }
                 return (objectCasters.GetCaster(type)(L, index, null));
@@ -1165,6 +1177,11 @@ namespace XLua
             else if (o is string)
             {
                 LuaAPI.lua_pushstring(L, o as string);
+            }
+            else if(type.IsEnum())
+            {
+                // 枚举对象全部转换为64位整型值，不作为object对象
+                LuaAPI.lua_pushint64(L, Convert.ToInt64(o));
             }
             else if (type == typeof(byte[]))
             {
