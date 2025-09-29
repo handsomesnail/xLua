@@ -240,6 +240,11 @@ if(UINT_ESPECIALLY)
     ADD_DEFINITIONS(-DUINT_ESPECIALLY)
 endif()
 
+# link static CRT(/MTd /MT) MSVC默认动态链接CRT(/MDd /MD)
+if(MSVC)
+  set_property(TARGET xlua PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 if ( WIN32 AND NOT CYGWIN )
     if (USING_LUAJIT)
         target_link_libraries(xlua
