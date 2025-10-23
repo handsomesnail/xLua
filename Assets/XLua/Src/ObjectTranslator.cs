@@ -1278,15 +1278,20 @@ namespace XLua
                 return;
             }
 
-            // 代码生成会直接调用ObjectTranslator.Push
+            // 代码生成会直接调用ObjectTranslator.Push，包括枚举和SidlObjectHandle
             if (o is SidlRT.SidlObjectHandle)
             {
                 LuaAPI.xlua_pushsidlobj(L, (o as SidlRT.SidlObjectHandle).InstanceId);
                 return;
             }
+            Type type = o.GetType();
+            if (type.IsEnum())
+            {
+                LuaAPI.lua_pushint64(L, Convert.ToInt64(o));
+                return;
+            }
 
             int index = -1;
-            Type type = o.GetType();
 #if !UNITY_WSA || UNITY_EDITOR
             bool is_enum = type.IsEnum;
             bool is_valuetype = type.IsValueType;
