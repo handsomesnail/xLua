@@ -186,7 +186,8 @@ if (APPLE)
                 ${THIRDPART_SRC}
             )
         else ()
-            set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_64_BIT)")
+            # set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_64_BIT)") # xcode generator
+            set(CMAKE_OSX_ARCHITECTURES x86_64) # unix makefiles generator
             add_library(xlua MODULE
                 ${LUA_CORE}
                 ${LUA_LIB}
